@@ -36,7 +36,9 @@ export default function Index() {
   const fetchNotes = async () => {
     try {
       console.log("Fetching notes...");
-      const response = await fetch("http://10.11.159.55:5000/api/notes");
+      const response = await fetch(
+        "https://noteapp-dazeou3a0-anwarhackers-projects.vercel.app/api/notes"
+      );
       console.log("Response status:", response.status);
       const data = await response.json();
       console.log("Fetched data:", data);
@@ -56,9 +58,12 @@ export default function Index() {
 
   const deleteNote = async (id: string) => {
     try {
-      const response = await fetch(`http://10.11.159.55:5000/api/notes/${id}`, {
-        method: "DELETE",
-      });
+      const response = await fetch(
+        `https://noteapp-dazeou3a0-anwarhackers-projects.vercel.app/api/notes/${id}`,
+        {
+          method: "DELETE",
+        }
+      );
       if (response.ok) {
         setNotes(notes.filter((note) => note._id !== id));
         console.log("Note deleted successfully");
@@ -73,7 +78,7 @@ export default function Index() {
   const toggleFavorite = async (id: string) => {
     try {
       const response = await fetch(
-        `http://10.11.159.55:5000/api/notes/${id}/favorite`,
+        `https://noteapp-dazeou3a0-anwarhackers-projects.vercel.app/api/notes/${id}/favorite`,
         {
           method: "PATCH",
         }

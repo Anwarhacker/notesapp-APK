@@ -22,7 +22,9 @@ export default function EditNote() {
   const fetchNote = async () => {
     try {
       console.log("Fetching note with id:", id);
-      const response = await fetch(`http://10.11.159.55:5000/api/notes/${id}`);
+      const response = await fetch(
+        `https://noteapp-dazeou3a0-anwarhackers-projects.vercel.app/api/notes/${id}`
+      );
       console.log("Response status:", response.status);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -46,13 +48,16 @@ export default function EditNote() {
     }
 
     try {
-      const response = await fetch(`http://10.11.159.55:5000/api/notes/${id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ title, content }),
-      });
+      const response = await fetch(
+        `https://noteapp-dazeou3a0-anwarhackers-projects.vercel.app/api/notes/${id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ title, content }),
+        }
+      );
 
       if (response.ok) {
         Alert.alert("Success", "Note updated successfully");

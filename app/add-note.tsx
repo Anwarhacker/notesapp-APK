@@ -14,13 +14,16 @@ export default function AddNote() {
     }
 
     try {
-      const response = await fetch("http://10.11.159.55:5000/api/notes", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ title, content }),
-      });
+      const response = await fetch(
+        "https://noteapp-dazeou3a0-anwarhackers-projects.vercel.app/api/notes",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ title, content }),
+        }
+      );
 
       if (response.ok) {
         Alert.alert("Success", "Note saved successfully");
