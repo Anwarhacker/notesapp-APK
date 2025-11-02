@@ -7,18 +7,7 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Middleware
-app.use(
-  cors({
-    origin: [
-      "mongodb+srv://patelanwar647_db_user:Anwarpatel@042@cluster0.wblhqbs.mongodb.net/?appName=Cluster0",
-      "http://localhost:8081",
-      "http://10.0.2.2:8081",
-      "http://10.11.159.55:8081",
-      "http://192.168.56.1:8081",
-    ],
-    credentials: true,
-  })
-);
+app.use(cors());
 app.use(express.json());
 
 // MongoDB connection
@@ -45,6 +34,7 @@ mongoose.connection.on("disconnected", () =>
 const noteSchema = new mongoose.Schema({
   title: { type: String, required: true },
   content: { type: String, required: true },
+  favorite: { type: Boolean, default: false },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 });
@@ -92,6 +82,21 @@ app.put("/api/notes/:id", async (req, res) => {
 
     note.title = req.body.title;
     note.content = req.body.content;
+    note.updatedAt = Date.now();
+
+    const updatedNote = await note.save();
+    res.json(updatedNote);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+});
+
+app.patch("/api/notes/:id/favorite", async (req, res) => {
+  try {
+    const note = await Note.findById(req.params.id);
+    if (!note) return res.status(404).json({ message: "Note not found" });
+
+    note.favorite = !note.favorite;
     note.updatedAt = Date.now();
 
     const updatedNote = await note.save();

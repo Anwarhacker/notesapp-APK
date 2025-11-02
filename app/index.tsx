@@ -1,3 +1,4 @@
+import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
@@ -14,6 +15,7 @@ interface Note {
   _id: string;
   title: string;
   content: string;
+  favorite: boolean;
   createdAt: string;
 }
 
@@ -21,6 +23,7 @@ export default function Index() {
   const [notes, setNotes] = useState<Note[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [refreshing, setRefreshing] = useState(false);
+  const [showFavorites, setShowFavorites] = useState(false);
 
   useEffect(() => {
     fetchNotes();
@@ -67,6 +70,25 @@ export default function Index() {
     }
   };
 
+  const toggleFavorite = async (id: string) => {
+    try {
+      const response = await fetch(
+        `http://10.11.159.55:5000/api/notes/${id}/favorite`,
+        {
+          method: "PATCH",
+        }
+      );
+      if (response.ok) {
+        const updatedNote = await response.json();
+        setNotes(notes.map((note) => (note._id === id ? updatedNote : note)));
+      } else {
+        console.error("Failed to toggle favorite");
+      }
+    } catch (error) {
+      console.error("Error toggling favorite:", error);
+    }
+  };
+
   const confirmDelete = (id: string) => {
     Alert.alert("Delete Note", "Are you sure you want to delete this note?", [
       { text: "Cancel", style: "cancel" },
@@ -74,32 +96,65 @@ export default function Index() {
     ]);
   };
 
-  const filteredNotes = notes.filter(
-    (note) =>
+  const filteredNotes = notes.filter((note) => {
+    const matchesSearch =
       note.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      note.content.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+      note.content.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesFavorite = !showFavorites || note.favorite;
+    return matchesSearch && matchesFavorite;
+  });
 
   const renderNote = ({ item }: { item: Note }) => (
-    <TouchableOpacity
-      className="bg-white p-4 mb-2 rounded-lg shadow-sm"
-      onPress={() => {
-        router.push(`/edit-note?id=${item._id}`);
-      }}
-      onLongPress={() => confirmDelete(item._id)}
-    >
-      <Text className="text-lg font-bold text-gray-800 mb-2">{item.title}</Text>
-      <Text className="text-gray-600" numberOfLines={2}>
-        {item.content}
-      </Text>
-      <Text className="text-xs text-gray-400 mt-2">
-        {new Date(item.createdAt).toLocaleDateString()}
-      </Text>
-    </TouchableOpacity>
+    <View className="bg-white p-4 mb-2 rounded-lg shadow-sm">
+      <View className="flex-row justify-between items-start">
+        <TouchableOpacity
+          className="flex-1"
+          onPress={() => {
+            router.push(`/edit-note?id=${item._id}`);
+          }}
+          onLongPress={() => confirmDelete(item._id)}
+        >
+          <Text className="text-lg font-bold text-gray-800 mb-2">
+            {item.title}
+          </Text>
+          <Text className="text-gray-600" numberOfLines={2}>
+            {item.content}
+          </Text>
+          <Text className="text-xs text-gray-400 mt-2">
+            {new Date(item.createdAt).toLocaleDateString()}
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          className="p-2"
+          onPress={() => toggleFavorite(item._id)}
+        >
+          <Ionicons
+            name={item.favorite ? "star" : "star-outline"}
+            size={24}
+            color={item.favorite ? "#FFD700" : "#ccc"}
+          />
+        </TouchableOpacity>
+      </View>
+    </View>
   );
 
   return (
     <SafeAreaView className="flex-1 bg-gray-100 p-4">
+      <View className="flex-row justify-between items-center mb-4">
+        <TouchableOpacity
+          className="flex-row items-center bg-white px-4 py-2 rounded-lg"
+          onPress={() => setShowFavorites(!showFavorites)}
+        >
+          <Ionicons
+            name="star"
+            size={20}
+            color={showFavorites ? "#FFD700" : "#ccc"}
+          />
+          <Text className="ml-2 text-lg">
+            {showFavorites ? "Show All" : "Favorites"}
+          </Text>
+        </TouchableOpacity>
+      </View>
       <TextInput
         className="bg-white p-3 rounded-lg mb-4 text-lg"
         placeholder="Search notes..."
