@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 interface Note {
   _id: string;
@@ -98,10 +99,7 @@ export default function Index() {
   );
 
   return (
-    <View className="flex-1 bg-gray-100 p-4">
-      <Text className="text-2xl font-bold text-center mb-4 text-gray-800">
-        My Notes
-      </Text>
+    <SafeAreaView className="flex-1 bg-gray-100 p-4">
       <TextInput
         className="bg-white p-3 rounded-lg mb-4 text-lg"
         placeholder="Search notes..."
@@ -129,6 +127,6 @@ export default function Index() {
       >
         <Text className="text-white text-2xl font-bold">+</Text>
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 }

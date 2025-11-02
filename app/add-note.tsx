@@ -1,6 +1,7 @@
 import { router } from "expo-router";
 import React, { useState } from "react";
 import { Alert, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function AddNote() {
   const [title, setTitle] = useState("");
@@ -36,7 +37,7 @@ export default function AddNote() {
   };
 
   return (
-    <View className="flex-1 bg-gray-100 p-4">
+    <SafeAreaView className="flex-1 bg-gray-100 p-4">
       <Text className="text-2xl font-bold text-center mb-6 text-gray-800">
         Add New Note
       </Text>
@@ -72,6 +73,6 @@ export default function AddNote() {
           <Text className="text-white text-lg font-semibold">Save</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }

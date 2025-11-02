@@ -1,6 +1,7 @@
 import { router, useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { Alert, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 interface Note {
   _id: string;
@@ -74,7 +75,7 @@ export default function EditNote() {
   }
 
   return (
-    <View className="flex-1 bg-gray-100 p-4">
+    <SafeAreaView className="flex-1 bg-gray-100 p-4">
       <Text className="text-2xl font-bold text-center mb-6 text-gray-800">
         Edit Note
       </Text>
@@ -110,6 +111,6 @@ export default function EditNote() {
           <Text className="text-white text-lg font-semibold">Update</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
