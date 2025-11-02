@@ -7,7 +7,22 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Middleware
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      "mongodb+srv://patelanwar647_db_user:Anwarpatel%40042@cluster0.wblhqbs.mongodb.net/?appName=Cluster0",
+      "http://localhost:8081",
+      "http://10.0.2.2:8081",
+      "http://10.11.159.55:8081",
+      "http://192.168.56.1:8081",
+      "exp://localhost:8081",
+      "exp://10.0.2.2:8081",
+      "exp://10.11.159.55:8081",
+      "exp://192.168.56.1:8081",
+    ],
+    credentials: true,
+  })
+);
 app.use(express.json());
 
 // Connect to MongoDB
