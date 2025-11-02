@@ -1,6 +1,8 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+require("dotenv").config();
+
 const connectDB = require("./db");
 
 const app = express();
@@ -10,7 +12,6 @@ const PORT = process.env.PORT || 5000;
 app.use(
   cors({
     origin: [
-      "mongodb+srv://patelanwar647_db_user:Anwarpatel%40042@cluster0.wblhqbs.mongodb.net/?appName=Cluster0",
       "http://localhost:8081",
       "http://10.0.2.2:8081",
       "http://10.11.159.55:8081",
@@ -19,16 +20,23 @@ app.use(
       "exp://10.0.2.2:8081",
       "exp://10.11.159.55:8081",
       "exp://192.168.56.1:8081",
+      "https://your-frontend-domain.vercel.app", // ✅ add your Expo web build domain later
     ],
     credentials: true,
   })
 );
+
 app.use(express.json());
 
-// Connect to MongoDB
+// ✅ Connect to MongoDB using .env value
 connectDB();
 
-// Note schema
+// ✅ Default route (prevents 404 on root)
+app.get("/", (req, res) => {
+  res.send("🚀 Notes Backend is running successfully on Vercel!");
+});
+
+// Schema
 const noteSchema = new mongoose.Schema({
   title: { type: String, required: true },
   content: { type: String, required: true },
@@ -116,6 +124,5 @@ app.delete("/api/notes/:id", async (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+// ✅ For Vercel (don't use app.listen)
+module.exports = app;
