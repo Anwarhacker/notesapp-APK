@@ -1,7 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-require("dotenv").config();
+const connectDB = require("./db");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -10,25 +10,8 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-// MongoDB connection
-mongoose
-  .connect(process.env.MONGODB_URI || "mongodb://localhost:27017/notesapp", {
-    serverSelectionTimeoutMS: 30000, // Increase timeout to 30s
-    socketTimeoutMS: 45000,
-  })
-  .then(() => console.log("MongoDB connected"))
-  .catch((err) => console.log("MongoDB connection error:", err));
-
-// Add connection event listeners for debugging
-mongoose.connection.on("connected", () =>
-  console.log("Mongoose connected to MongoDB")
-);
-mongoose.connection.on("error", (err) =>
-  console.log("Mongoose connection error:", err)
-);
-mongoose.connection.on("disconnected", () =>
-  console.log("Mongoose disconnected")
-);
+// Connect to MongoDB
+connectDB();
 
 // Note schema
 const noteSchema = new mongoose.Schema({
